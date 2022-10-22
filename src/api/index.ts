@@ -74,7 +74,7 @@ export default {
   getQuestionByProductId: async (product_id: string): Promise<any> => {
     let question = undefined
     while (!question) {
-      // questions = await fetch.questionsByProductId(product_id)
+      const questions = await fetch.questionsByProductId(product_id)
       question = questions[getRandomInt(0, questions.length)]
     }
     return question
