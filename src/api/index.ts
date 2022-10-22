@@ -1,4 +1,7 @@
 import axios from 'axios'
+// import * as dotenv from 'dotenv'
+// dotenv.config()
+
 import { questions } from '../../question_example.json'
 
 export const getRandomInt = (min: number, max: number): number => {
@@ -7,6 +10,8 @@ export const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+const ML_SECRET_KEY = 'pnZrLhspqg9ktuzwRz7FmiR1rCrYuEKF'
+
 const getWithAuth = (url: string, secretKey: string) =>
   axios.get(url, { headers: { Authorization: `Bearer ${secretKey}` } })
 
@@ -14,21 +19,21 @@ const fetch = {
   categories: async () => {
     const { data } = await getWithAuth(
       'https://api.mercadolibre.com/sites/MLA/categories',
-      process.env.ML_SECRET_KEY as string
+      ML_SECRET_KEY
     )
     return data
   },
   productsByCategoryId: async (category_id: string) => {
     const { data } = await getWithAuth(
       `https://api.mercadolibre.com/sites/MLA/search?category=${category_id}`,
-      process.env.ML_SECRET_KEY as string
+      ML_SECRET_KEY
     )
     return data.results
   },
   questionsByProductId: async (product_id: string) => {
     const { data } = await getWithAuth(
       `https://api.mercadolibre.com/questions/search?item=${product_id}`,
-      process.env.ML_SECRET_KEY as string
+      ML_SECRET_KEY
     )
     return data
   }
