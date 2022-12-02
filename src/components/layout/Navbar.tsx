@@ -42,12 +42,7 @@ const Navbar = (props: Props) => {
             positions={['translate-y-12', 'translate-y-12 translate-x-16']}
             currentPosition={hoverMsgPos}
           />
-          <div
-            onMouseLeave={() => {
-              setShowMsg(false)
-            }}
-            className="flex gap-4"
-          >
+          <div className="flex gap-4">
             <button
               className={`border-[1px] px-3 py-2 rounded-lg hover:border-mercadolibre-btn 
             ${
@@ -60,6 +55,7 @@ const Navbar = (props: Props) => {
                 setShowMsg(false)
               }}
               onMouseEnter={() => language === 'EN' && handleMouseHover(0)}
+              onMouseLeave={() => language === 'EN' && setShowMsg(false)}
             >
               ES
             </button>
@@ -75,6 +71,7 @@ const Navbar = (props: Props) => {
                 setShowMsg(false)
               }}
               onMouseEnter={() => language === 'ES' && handleMouseHover(1)}
+              onMouseLeave={() => language === 'ES' && setShowMsg(false)}
             >
               EN
             </button>
