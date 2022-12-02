@@ -1,10 +1,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      ML_CLIENT_SECRET: string | undefined
-      NODE_ENV: 'development' | 'production'
-      PORT?: string
-      PWD: string
+      ML_CLIENT_SECRET?: string
     }
   }
 }
