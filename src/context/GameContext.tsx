@@ -71,7 +71,7 @@ function gameReducer(state: State, action: Action): State {
           ? {
               ...state.score,
               correct: state.score.correct + 1,
-              total: state.score.total + 1
+              total: state.score.total + (3 - state.questionResets)
             }
           : {
               ...state.score,
