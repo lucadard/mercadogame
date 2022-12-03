@@ -13,13 +13,13 @@ const Next = ({ onNextRound }: Props) => {
       className={`z-[90] absolute right-0 grid place-content-center overflow-hidden shadow-sm hover:shadow-lg rounded-l-md transition-transform duration-1000 cursor-pointer ease-in-out 
       ${!state.selectedProductId ? 'translate-x-full' : ''}`}
     >
-      <div className="select-none bg-white px-10 py-8 flex gap-2" onClick={onNextRound}>
-        {/* <span className="material-symbols-outlined text-3xl animate-arrowForward">
-          arrow_forward_ios
-        </span> */}
-        <Emoji className='w-10' name='right-arrow'></Emoji>
-        <Emoji className='w-10' name='right-arrow'></Emoji>
-        <Emoji className='w-10' name='right-arrow'></Emoji>
+      <div
+        className="select-none bg-white px-10 py-8 flex gap-2"
+        onClick={onNextRound}
+      >
+        <Emoji className="w-10" name="right-arrow"></Emoji>
+        <Emoji className="w-10" name="right-arrow"></Emoji>
+        <Emoji className="w-10" name="right-arrow"></Emoji>
       </div>
     </div>
   )

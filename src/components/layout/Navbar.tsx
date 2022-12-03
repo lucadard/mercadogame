@@ -31,12 +31,12 @@ const Navbar = (props: Props) => {
         </Popup>
       )}
       <nav className="bg-mercadolibre-primary grid grid-cols-3 items-center border-b-[1px] border-gray-300">
-        <div className="relative flex mr-auto px-10 gap-4">
+        <div className="z-[20] relative flex mr-auto px-10 gap-4">
           <HoverMessage
             message={
               language === 'ES'
-                ? 'But only the instructions!'
-                : 'Solo las instrucciones!'
+                ? 'But only the instructions change!'
+                : 'Pero solo cambian las instrucciones!'
             }
             show={showMsg}
             positions={['translate-y-12', 'translate-y-12 translate-x-16']}
@@ -87,7 +87,7 @@ const Navbar = (props: Props) => {
         </div>
         <div className="relative flex ml-auto px-10 gap-4">
           <button
-            className={`border-[1px] w-[145px] px-3 py-2 rounded-lg hover:border-mercadolibre-btn  
+            className={`border-[1px] px-3 py-2 rounded-lg hover:border-mercadolibre-btn  
         ${
           isBtnClicked
             ? 'outline outline-mercadolibre-btn border-solid border-mercadolibre-btn'

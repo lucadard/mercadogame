@@ -46,7 +46,7 @@ const ProductsSection = ({ children, isLoading, setIsLoading }: Props) => {
   }
 
   return (
-    <section className="flex flex-col gap-2 min-h-[300px]">
+    <section className="flex flex-col gap-2">
       {children}
       <div className="rounded-md flex justify-center gap-6 ">
         {isLoading ? (
