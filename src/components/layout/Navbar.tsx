@@ -24,8 +24,8 @@ const Navbar = (props: Props) => {
           <div>
             <p className="text-center">
               {language === 'EN'
-                ? 'I have nothing to write here yet 🤔'
-                : 'No se me ocurre que poner aca todavia 🤔'}
+                ? 'Nothing to see here, yet...'
+                : 'Nada que mostrar, todavia...'}
             </p>
           </div>
         </Popup>
@@ -95,7 +95,7 @@ const Navbar = (props: Props) => {
         }`}
             onClick={() => setIsBtnClicked(true)}
           >
-            {language === 'EN' ? 'How it works?' : 'Como funciona?'}
+            {language === 'EN' ? 'Leaderboard' : 'Tabla de posiciones'}
           </button>
         </div>
       </nav>
