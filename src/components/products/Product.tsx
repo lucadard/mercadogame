@@ -67,7 +67,16 @@ const Product = ({
                   }
                   `}
       >
-        <p className="overflow-hidden max-h-10 text-ellipsis text-[13px] text-gray-600 transition-opacity transition-100 opacity-0 group-hover:opacity-100 group-hover:delay-200 delay-0">
+        <p
+          className={`overflow-hidden max-h-10 text-ellipsis text-[13px] text-gray-600 transition-opacity transition-100 opacity-0 group-hover:opacity-100 group-hover:delay-200 delay-0 
+          ${state.selectedProductId === id ? 'opacity-100' : 'opacity-0'}
+          ${
+            state.selectedProductId &&
+            id === state.questions[questionResets].item_id
+              ? 'opacity-100'
+              : 'opacity-0'
+          }`}
+        >
           {title}
         </p>
       </div>
