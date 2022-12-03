@@ -1,13 +1,23 @@
 import * as React from 'react'
-import useCategories from '../hooks/useCategories'
-import { Category, Product, Question } from '../types'
+
+import useLocalStorage from '../hooks/useLocalStorage'
 
 type LanguageProviderProps = { children: React.ReactNode }
 
-const LanguageStateContext = React.createContext<any>(undefined)
+type Language = 'ES' | 'EN'
+
+const LanguageStateContext = React.createContext<
+  | {
+      language: Language
+      setLanguage: (language: Language) => void
+    }
+  | undefined
+>(undefined)
 
 function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = React.useState('ES')
+  const { storedValue: language, setValue: setLanguage } =
+    useLocalStorage<Language>('language', 'ES')
+
   const value = { language, setLanguage }
   return (
     <LanguageStateContext.Provider value={value}>

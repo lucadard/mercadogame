@@ -1,12 +1,14 @@
 import React from 'react'
+import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {}
 
 const Footer = (props: Props) => {
+  const { language } = useLanguage()
   return (
     <div className="text-center pt-4 mt-auto mb-6">
       <span>
-        made by
+        {language === 'EN' ? 'made by' : 'hecho por'}
         <a
           href="https://github.com/lucadard"
           target="_blank"

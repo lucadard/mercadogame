@@ -12,6 +12,7 @@ import Navbar from './components/layout/Navbar'
 import Popup from './components/layout/Popup'
 import { useLanguage } from './context/LanguageContext'
 import Footer from './components/layout/Footer'
+import useLocalStorage from './hooks/useLocalStorage'
 
 function App() {
   const { state, dispatch, getCategories } = useGame()
@@ -21,7 +22,18 @@ function App() {
     products: false,
     question: false
   })
-  const [showErrorPopup, setShowErrorPopup] = useState(false)
+  const [displayErrorPopup, setDisplayErrorPopup] = useState(false)
+
+  const [displayWelcomePopup, setDisplayWelcomePopup] = useState(false)
+
+  const {
+    storedValue: showWelcomeMsgOnStart,
+    setValue: setShowWelcomeMsgOnStart
+  } = useLocalStorage('showWelcomeMessage', true)
+
+  useEffect(() => {
+    showWelcomeMsgOnStart && setDisplayWelcomePopup(true)
+  }, [])
 
   useEffect(() => {
     setCategories()
@@ -42,7 +54,7 @@ function App() {
     setIsLoading((prev) => ({ ...prev, question: false }))
     if (questions === undefined) {
       console.log('no hay preguntas disponibles, reiniciando ronda...')
-      return setShowErrorPopup(true)
+      return setDisplayErrorPopup(true)
     }
     dispatch({ type: 'set_questions', payload: questions! })
   }
@@ -60,10 +72,36 @@ function App() {
 
   return (
     <>
-      {showErrorPopup && (
+      {displayWelcomePopup && (
         <Popup
           action={() => {
-            setShowErrorPopup(false)
+            setDisplayWelcomePopup(false)
+          }}
+          closeMessages={{ EN: 'Start playing', ES: 'Comenzar a jugar' }}
+        >
+          <div className="flex flex-col gap-4 items-center">
+            <p className="text-center">
+              {language === 'EN' ? 'Welcome' : 'Bienvenido'}!
+            </p>
+            <span className="flex gap-2 items-center">
+              {language === 'EN'
+                ? 'Not show this message again'
+                : 'No mostrar otra vez este mensaje'}
+              <input
+                type="checkbox"
+                checked={!showWelcomeMsgOnStart}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setShowWelcomeMsgOnStart(!e.target.checked)
+                }}
+              />
+            </span>
+          </div>
+        </Popup>
+      )}
+      {displayErrorPopup && (
+        <Popup
+          action={() => {
+            setDisplayErrorPopup(false)
             dispatch({ type: 'round_next', payload: false })
             setCategories()
           }}
@@ -84,9 +122,9 @@ function App() {
           </div>
         </Popup>
       )}
-      <main className="min-h-screen flex flex-col bg-mercadolibre-secondary overflow-hidden">
+      <main className="h-screen gap-4 flex flex-col bg-mercadolibre-secondary">
         <Navbar />
-        <div className="h-full flex flex-col gap-4 py-2">
+        <div className="flex flex-col gap-4">
           <CategoriesSection>
             <h3 className="font-medium pl-3">
               1.
@@ -113,7 +151,7 @@ function App() {
               3.
               {language === 'EN'
                 ? ' Analize and choose your pick'
-                : ' Analiza y elegi'}
+                : ' Analiza y elegi tu respuesta'}
               :
             </h3>
           </ProductsSection>
