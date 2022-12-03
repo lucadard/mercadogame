@@ -24,17 +24,6 @@ function App() {
   })
   const [displayErrorPopup, setDisplayErrorPopup] = useState(false)
 
-  const [displayWelcomePopup, setDisplayWelcomePopup] = useState(false)
-
-  const {
-    storedValue: showWelcomeMsgOnStart,
-    setValue: setShowWelcomeMsgOnStart
-  } = useLocalStorage('showWelcomeMessage', true)
-
-  useEffect(() => {
-    showWelcomeMsgOnStart && setDisplayWelcomePopup(true)
-  }, [])
-
   useEffect(() => {
     setCategories()
   }, [])
@@ -72,32 +61,6 @@ function App() {
 
   return (
     <>
-      {displayWelcomePopup && (
-        <Popup
-          action={() => {
-            setDisplayWelcomePopup(false)
-          }}
-          closeMessages={{ EN: 'Start playing', ES: 'Comenzar a jugar' }}
-        >
-          <div className="flex flex-col gap-4 items-center">
-            <p className="text-center">
-              {language === 'EN' ? 'Welcome' : 'Bienvenido'}!
-            </p>
-            <span className="flex gap-2 items-center">
-              {language === 'EN'
-                ? 'Not show this message again'
-                : 'No mostrar otra vez este mensaje'}
-              <input
-                type="checkbox"
-                checked={!showWelcomeMsgOnStart}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setShowWelcomeMsgOnStart(!e.target.checked)
-                }}
-              />
-            </span>
-          </div>
-        </Popup>
-      )}
       {displayErrorPopup && (
         <Popup
           action={() => {
