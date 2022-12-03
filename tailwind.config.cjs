@@ -11,6 +11,9 @@ module.exports = {
       fontFamily: {
         sans: ['Roboto']
       },
+      backdropBlur: {
+        xs: '2px'
+      },
       colors: {
         'mercadolibre-primary': '#fff159',
         'mercadolibre-secondary': 'rgb(235 235 235)',
