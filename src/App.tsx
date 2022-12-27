@@ -85,7 +85,7 @@ function App() {
           </div>
         </Popup>
       )}
-      <main className="h-screen gap-4 flex flex-col bg-mercadolibre-secondary">
+      <main className="overflow-hidden h-screen gap-4 flex flex-col bg-mercadolibre-secondary">
         <Navbar />
         <div className="flex flex-col gap-4">
           <CategoriesSection>

@@ -59,7 +59,11 @@ const Product = ({
         {isImageLoading ? (
           <LoadingSpinner />
         ) : (
-          <img className="h-full" src={thumbnail} alt={`Foto de ${title}`} />
+          <img
+            className="h-full object-contain"
+            src={thumbnail}
+            alt={`Foto de ${title}`}
+          />
         )}
       </div>
       <div
