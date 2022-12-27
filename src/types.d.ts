@@ -6,7 +6,6 @@ export type Category = {
 export type Product = {
   title: string
   id: string
-  thumbnail: string
   permalink: string
 }
 

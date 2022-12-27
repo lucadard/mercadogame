@@ -88,6 +88,11 @@ export default {
     }
     return selectedProducts
   },
+  getProductPicture: async (product_id: string) => {
+    const url = `https://api.mercadolibre.com/items/${product_id}/`
+    const { data } = await axios.get(url)
+    return data.pictures[0].secure_url
+  },
 
   getQuestionsByProductId: async (
     product_id: string,

@@ -54,12 +54,11 @@ const ProductsSection = ({ children, isLoading, setIsLoading }: Props) => {
             <LoadingDots />
           </div>
         ) : (
-          stateCopy.products.map(({ id, title, thumbnail }: ProductType) => {
+          stateCopy.products.map(({ id, title }: ProductType) => {
             return (
               <Product
                 key={id}
                 id={id}
-                thumbnail={thumbnail}
                 title={title}
                 isVisible={isVisible}
                 state={stateCopy}

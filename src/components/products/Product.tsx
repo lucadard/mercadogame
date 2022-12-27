@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../api'
+import { LoadingSpinner } from '../../assets/Loading'
 import { State, useGame } from '../../context/GameContext'
 
 type Props = {
   id: string
   title: string
-  thumbnail: string
   isVisible: boolean
   state: State
   onProductSelection: (id: string) => void
@@ -14,12 +14,18 @@ type Props = {
 const Product = ({
   id,
   title,
-  thumbnail,
   isVisible,
   state,
   onProductSelection
 }: Props) => {
   const { questionResets } = useGame().state
+  const [isImageLoading, setIsImageLoading] = useState(true)
+  const [thumbnail, setThumbnail] = useState('')
+  api
+    .getProductPicture(id)
+    .then(setThumbnail)
+    .finally(() => setIsImageLoading(false))
+
   return (
     <div
       key={id}
@@ -43,14 +49,18 @@ const Product = ({
           </div>
         )}
       <div
-        className={`border-b-[1px] border-gray-200 bg-white rounded-md group-hover:shadow-none overflow-hidden transition-all duration-100 
+        className={`h-[180px] w-[180px] flex justify-center items-center border-b-[1px] border-gray-200 bg-white rounded-md group-hover:shadow-none overflow-hidden transition-all duration-100 
         ${
           state.selectedCategoryId
             ? 'rounded-b-none'
             : 'group-hover:rounded-b-none'
         }`}
       >
-        <img className="h-[180px]" src={thumbnail} alt={`Foto de ${title}`} />
+        {isImageLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <img className="h-full" src={thumbnail} alt={`Foto de ${title}`} />
+        )}
       </div>
       <div
         className={`-z-10 w-full absolute p-3 -mt-[70px] rounded-b-md bg-white transition-all duration-200 
