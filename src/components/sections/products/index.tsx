@@ -6,12 +6,11 @@ import { Product as ProductType } from '../../../types'
 import Product from './Product'
 
 type Props = {
-  children: any
   isLoading: boolean
   setIsLoading: any
 }
 
-const ProductsSection = ({ children, isLoading, setIsLoading }: Props) => {
+const ProductsSection = ({ isLoading, setIsLoading }: Props) => {
   const [isVisible, setIsVisible] = useState(false)
   const { state, dispatch } = useGame()
   const [stateCopy, setStateCopy] = useState<State>(state)
@@ -47,7 +46,9 @@ const ProductsSection = ({ children, isLoading, setIsLoading }: Props) => {
 
   return (
     <section className="flex flex-col gap-2">
-      {children}
+      <h3 className="font-medium pl-3 w-[600px] mx-auto">
+        3.Analiza y elegi tu respuesta:
+      </h3>
       <div className="rounded-md flex justify-center gap-6 ">
         {isLoading ? (
           <div className="mt-10 grid place-content-center">

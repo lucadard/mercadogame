@@ -5,11 +5,10 @@ import Text from './Text'
 import { LoadingSpinner } from '../../../assets/Loading'
 
 type Props = {
-  children: any
   isLoading: boolean
 }
 
-const QuestionSection = ({ children, isLoading }: Props) => {
+const QuestionSection = ({ isLoading }: Props) => {
   const { state } = useGame()
 
   const renderChildren = () => {
@@ -29,7 +28,9 @@ const QuestionSection = ({ children, isLoading }: Props) => {
 
   return (
     <section className="z-20 relative flex flex-col gap-2 w-[600px] mx-auto h-[100px]">
-      {children}
+      <h3 className="font-medium pl-3">
+        2.Hace click para revelar la pregunta:
+      </h3>
       <div className="min-h-[62px]">{renderChildren()}</div>
     </section>
   )
