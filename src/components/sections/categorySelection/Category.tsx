@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { LoadingSpinner } from '../../../assets/Loading'
 import { useGame } from '../../../context/GameContext'
 import Emoji from '../../Emoji'
-import { ICONS } from '.'
+import { icons } from './iconsData'
 
 type Props = {
   id: string
@@ -10,7 +11,16 @@ type Props = {
 }
 
 const Category = ({ id, name, onCategorySelection }: Props) => {
+  const [mounted, setMounted] = useState(false)
   const { selectedCategoryId } = useGame().state
+
+  useEffect(() => {
+    // force "loading" state when round starts
+    setTimeout(() => {
+      setMounted(true)
+    }, 500)
+  }, [id])
+
   return (
     <div
       key={id}
@@ -21,10 +31,18 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
       }`}
       onClick={() => onCategorySelection(id)}
     >
-      <div className="flex justify-center items-end">
-        <Emoji name={ICONS[id]} />
-      </div>
-      <span className="text-center text-[15px]">{name}</span>
+      {mounted ? (
+        <>
+          <div className="flex justify-center items-end">
+            <Emoji name={icons[id as keyof typeof icons]} />
+          </div>
+          <span className="text-center text-[15px]">{name}</span>
+        </>
+      ) : (
+        <div className="flex justify-center items-end">
+          <LoadingSpinner />
+        </div>
+      )}
     </div>
   )
 }
