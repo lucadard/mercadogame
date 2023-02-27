@@ -3,7 +3,7 @@ import api from '../../../api'
 import { LoadingDots } from '../../../assets/Loading'
 import { State, useGame } from '../../../context/GameContext'
 import { Product as ProductType } from '../../../types'
-import Product from './Product'
+import ProductCard from './Product'
 
 type Props = {
   isLoading: boolean
@@ -11,21 +11,7 @@ type Props = {
 }
 
 const ProductsSection = ({ isLoading, setIsLoading }: Props) => {
-  const [isVisible, setIsVisible] = useState(false)
   const { state, dispatch } = useGame()
-  const [stateCopy, setStateCopy] = useState<State>(state)
-
-  useEffect(() => {
-    if (state.products.length) {
-      setIsVisible(true)
-      setStateCopy(state)
-    } else {
-      setIsVisible(false)
-      setTimeout(() => {
-        setStateCopy(state)
-      }, 1000)
-    }
-  }, [state.products, state.selectedProductId])
 
   const getProducts = async (categoryId: string) => {
     setIsLoading((prev: any) => ({ ...prev, products: true }))
@@ -45,24 +31,23 @@ const ProductsSection = ({ isLoading, setIsLoading }: Props) => {
   }
 
   return (
-    <section className="flex flex-col gap-2">
-      <h3 className="font-medium pl-3 w-[600px] mx-auto">
-        3.Analiza y elegi tu respuesta:
+    <section className="flex flex-col gap-2 mx-auto">
+      <h3 className="font-medium pl-3 w-full max-w-[600px] mx-auto mb-4">
+        3. Analiza y elegi tu respuesta:
       </h3>
-      <div className="rounded-md flex justify-center gap-6 ">
+      <div className="grid grid-cols-2 lg:grid-flow-col auto-cols-min gap-4 mx-auto min-h-[250px]">
         {isLoading ? (
-          <div className="mt-10 grid place-content-center">
+          <div className="col-span-full row-span-full flex justify-center items-center">
             <LoadingDots />
           </div>
         ) : (
-          stateCopy.products.map(({ id, title }: ProductType) => {
+          state.products.map(({ id, title }: ProductType) => {
             return (
-              <Product
+              <ProductCard
                 key={id}
                 id={id}
                 title={title}
-                isVisible={isVisible}
-                state={stateCopy}
+                state={state}
                 onProductSelection={handleProductSelection}
               />
             )
