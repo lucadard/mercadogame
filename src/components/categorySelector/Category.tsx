@@ -1,6 +1,6 @@
 import React from 'react'
 import { useGame } from '../../context/GameContext'
-
+import Emoji from '../Emoji'
 import { ICONS } from './Section'
 
 type Props = {
@@ -22,7 +22,7 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
       onClick={() => onCategorySelection(id)}
     >
       <div className="flex justify-center items-end">
-
+        <Emoji name={ICONS[id]} />
       </div>
       <span className="text-center text-[15px]">{name}</span>
     </div>
