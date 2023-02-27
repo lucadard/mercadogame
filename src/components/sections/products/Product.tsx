@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import api from '../../api'
-import { LoadingSpinner } from '../../assets/Loading'
-import { State, useGame } from '../../context/GameContext'
+import api from '../../../api'
+import { LoadingSpinner } from '../../../assets/Loading'
+import { State, useGame } from '../../../context/GameContext'
 
 type Props = {
   id: string

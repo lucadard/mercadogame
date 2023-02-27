@@ -1,25 +1,26 @@
-import React from 'react'
-import { useLanguage } from '../../context/LanguageContext'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
   action: (args: any) => any
-  closeMessages?: { EN: string; ES: string }
+  closeMessage?: string
   children: any
 }
 
-const Popup = ({
-  action,
-  children,
-  closeMessages = { EN: 'Close', ES: 'Cerrar' }
-}: Props) => {
-  const { language } = useLanguage()
+const Modal = ({ action, children, closeMessage = 'Cerrar' }: Props) => {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   return (
-    <>
+    <div
+      className={`z-[100] fixed left-0 top-0 h-screen w-screen transition-opacity duration-300 
+      ${mounted ? '' : 'opacity-0'}`}
+    >
       <div
-        className="z-[99] bg-black absolute bg-opacity-50 w-full h-full backdrop-blur-xs select-none"
+        className="bg-black absolute bg-opacity-50 w-full h-full select-none"
         onClick={action}
       />
-      <div className="z-[100] absolute w-full h-full grid place-content-center -mt-32 pointer-events-none">
+      <div className="relative z-10 h-full grid place-content-center -mt-32 pointer-events-none">
         <div className="w-[500px] bg-white rounded-md flex flex-col justify-between items-center p-6 gap-4 pointer-events-auto">
           {children}
           <div>
@@ -27,13 +28,13 @@ const Popup = ({
               className="py-2 px-4 bg-mercadolibre-btn hover:bg-mercadolibre-btn-hover transition-colors duration-300 text-white rounded-sm"
               onClick={action}
             >
-              {closeMessages[language]}
+              {closeMessage}
             </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default Popup
+export default Modal

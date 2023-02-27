@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {}
 
 const Lock = (props: Props) => {
-  const { language } = useLanguage()
   const [showMessage, setShowMessage] = useState(false)
   return (
     <div className="grid place-content-center h-full bg-white shadow-sm hover:shadow-lg">
@@ -17,10 +15,7 @@ const Lock = (props: Props) => {
           ▼
         </span>
         <span className="bg-black text-white py-1 px-3 rounded-md whitespace-nowrap">
-          {language === 'EN'
-            ? 'You need to select a category first'
-            : 'Primero tenes que seleccionar una categoria'}
-          !
+          Primero tenes que seleccionar una categoria!
         </span>
       </div>
       <span

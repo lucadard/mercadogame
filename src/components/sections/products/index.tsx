@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import api from '../../api'
-import { LoadingDots } from '../../assets/Loading'
-import { State, useGame } from '../../context/GameContext'
-import { Product as ProductType } from '../../types'
+import api from '../../../api'
+import { LoadingDots } from '../../../assets/Loading'
+import { State, useGame } from '../../../context/GameContext'
+import { Product as ProductType } from '../../../types'
 import Product from './Product'
 
 type Props = {

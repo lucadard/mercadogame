@@ -1,7 +1,7 @@
 import React from 'react'
-import { useGame } from '../../context/GameContext'
-import Emoji from '../Emoji'
-import { ICONS } from './Section'
+import { useGame } from '../../../context/GameContext'
+import Emoji from '../../Emoji'
+import { ICONS } from '.'
 
 type Props = {
   id: string

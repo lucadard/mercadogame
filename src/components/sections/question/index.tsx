@@ -1,8 +1,8 @@
-import { useGame } from '../../context/GameContext'
+import { useGame } from '../../../context/GameContext'
 
-import Lock from './Lock'
+import Lock from './LockIcon'
 import Text from './Text'
-import { LoadingSpinner } from '../../assets/Loading'
+import { LoadingSpinner } from '../../../assets/Loading'
 
 type Props = {
   children: any
