@@ -36,7 +36,7 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
           <div className="flex justify-center items-end">
             <Emoji name={icons[id as keyof typeof icons]} />
           </div>
-          <span className="text-center text-[15px]">{name}</span>
+          <span className="text-center text-[15px] mt-2">{name}</span>
         </>
       ) : (
         <div className="flex justify-center items-end">
