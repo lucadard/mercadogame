@@ -14,16 +14,14 @@ const CategoriesSection = () => {
     <section className="z-10 flex flex-col gap-2 w-[600px] mx-auto">
       <h3 className="font-medium pl-3">1. Selecciona una categoria:</h3>
       <div className="bg-white h-[180px] rounded-sm shadow-sm grid grid-cols-3 select-none hover:shadow-lg">
-        {state.categories.map(({ id, name }: CategoryType) => {
-          return (
-            <Category
-              key={id}
-              id={id}
-              name={name}
-              onCategorySelection={handleCategorySelection}
-            />
-          )
-        })}
+        {state.categories.map(({ id, name }: CategoryType) => (
+          <Category
+            key={id}
+            id={id}
+            name={name}
+            onCategorySelection={handleCategorySelection}
+          />
+        ))}
       </div>
     </section>
   )
