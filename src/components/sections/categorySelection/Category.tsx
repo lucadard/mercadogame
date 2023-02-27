@@ -23,7 +23,6 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
 
   return (
     <div
-      key={id}
       className={`grid grid-rows-2 p-4 border-[1px] border-gray-100 ${
         !selectedCategoryId
           ? 'hover:bg-blue-500 hover:text-white cursor-pointer'
@@ -40,7 +39,7 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
         </>
       ) : (
         <div className="flex justify-center items-end">
-          <LoadingSpinner />
+          <LoadingSpinner size={40} />
         </div>
       )}
     </div>

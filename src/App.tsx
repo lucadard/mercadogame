@@ -74,19 +74,24 @@ function App() {
           </div>
         </Modal>
       )}
-      <main className="overflow-hidden h-screen gap-4 flex flex-col bg-mercadolibre-secondary">
+      <main className="min-h-screen flex flex-col">
         <Navbar />
-        <div className="flex flex-col gap-4">
+        <div className="px-10 md:px-0 pt-2 h-full flex-1">
           <CategoriesSection />
           <QuestionSection isLoading={isLoading.question} />
           <ProductsSection
             isLoading={isLoading.products}
             setIsLoading={setIsLoading}
           />
-          <Next onNextRound={handleNextRound} />
         </div>
-        <Footer />
+        <div className="grid place-content-center">
+          <Next
+            onNextRound={handleNextRound}
+            disabled={!Boolean(state.selectedProductId)}
+          />
+        </div>
       </main>
+      <Footer />
     </>
   )
 }

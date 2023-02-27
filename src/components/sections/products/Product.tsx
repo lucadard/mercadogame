@@ -2,22 +2,16 @@ import React, { useEffect, useState } from 'react'
 import api from '../../../api'
 import { LoadingSpinner } from '../../../assets/Loading'
 import { State, useGame } from '../../../context/GameContext'
+import { isMobile } from 'react-device-detect'
 
 type Props = {
   id: string
   title: string
-  isVisible: boolean
   state: State
   onProductSelection: (id: string) => void
 }
 
-const ProductCard = ({
-  id,
-  title,
-  isVisible,
-  state,
-  onProductSelection
-}: Props) => {
+const ProductCard = ({ id, title, state, onProductSelection }: Props) => {
   const { questionResets } = useGame().state
   const [isImageLoading, setIsImageLoading] = useState(true)
   const [thumbnail, setThumbnail] = useState('')
@@ -35,62 +29,65 @@ const ProductCard = ({
   }, [])
 
   return (
-    <div className="h-[250px]">
-      <div
-        className={`relative w-[180px] transition-all group bg-white rounded-md overflow-hidden 
+    <div className="h-[220px] sm:h-[250px] w-[140px] sm:w-[180px]">
+      {isImageLoading ? (
+        <div className="w-full aspect-square grid place-content-center">
+          <LoadingSpinner size={50}/>
+        </div>
+      ) : (
+        <div
+          className={`relative transition-all group bg-white rounded-md overflow-hidden 
         ${userHasSelected ? '' : 'cursor-pointer'}
+        ${isSelected ? 'shadow-lg' : ''}
         ${
-          isSelected || isCorrectAnswer
-            ? 'shadow-lg'
+          isSelected || isCorrectAnswer || isMobile
+            ? ''
             : 'max-h-[180px] hover:max-h-[250px] shadow-sm hover:shadow-lg'
         }
         `}
-        onClick={() => !userHasSelected && onProductSelection(id)}
-      >
-        {isCorrectAnswer && (
-          <div className="absolute top-0 left-0 h-[180px] w-full flex justify-center items-center pointer-events-none">
-            <span
-              className={`material-symbols-outlined text-9xl ${
-                isCorrectAnswer && isSelected ? 'text-green-600' : ''
-              }`}
-            >
-              check_circle
-            </span>
-          </div>
-        )}
-        {isImageLoading ? (
-          <div className="w-full aspect-square grid place-content-center">
-            <LoadingSpinner />
-          </div>
-        ) : (
+          onClick={() => !userHasSelected && onProductSelection(id)}
+        >
+          {isCorrectAnswer && (
+            <div className="absolute top-0 left-0 lg:h-[180px] w-full flex justify-center items-center pointer-events-none">
+              <span
+                className={`material-symbols-outlined text-9xl ${
+                  isCorrectAnswer && isSelected ? 'text-green-600' : ''
+                }`}
+              >
+                check_circle
+              </span>
+            </div>
+          )}
           <img
             className={`w-full aspect-square object-contain 
             ${isSelected || isCorrectAnswer ? 'opacity-30' : ''}`}
             src={thumbnail}
             alt={`Foto de ${title}`}
           />
-        )}
-        <div
-          className={`transition-all duration-300 overflow-hidden 
+          <div
+            className={`transition-all duration-300 overflow-hidden 
         ${
-          isSelected || isCorrectAnswer
+          isSelected || isCorrectAnswer || isMobile
             ? 'max-h-14'
             : 'max-h-0 group-hover:max-h-14'
         }`}
-        >
-          <div className="h-[1px] bg-gray-400/30" />
-          <div
-            className={`p-2 px-3 transition-all group-hover:delay-200 group-hover:duration-200 duration-100 text-ellipsis text-[13px] text-gray-600 
+          >
+            <div className="h-[1px] bg-gray-400/30" />
+            <div
+              className={`p-2 px-3 transition-all group-hover:delay-200 group-hover:duration-200 duration-100 text-ellipsis text-[13px] text-gray-600 
           ${
             isSelected || isCorrectAnswer
               ? 'opacity-70'
+              : isMobile
+              ? 'opacity-100'
               : 'opacity-0 group-hover:opacity-100'
           }`}
-          >
-            <p className="max-h-10 overflow-hidden">{title}</p>
+            >
+              <p className="max-h-10 overflow-hidden">{title}</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
