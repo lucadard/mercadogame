@@ -11,7 +11,7 @@ type Props = {
   onProductSelection: (id: string) => void
 }
 
-const Product = ({
+const ProductCard = ({
   id,
   title,
   isVisible,
@@ -21,81 +21,78 @@ const Product = ({
   const { questionResets } = useGame().state
   const [isImageLoading, setIsImageLoading] = useState(true)
   const [thumbnail, setThumbnail] = useState('')
-  api
-    .getProductPicture(id)
-    .then(setThumbnail)
-    .finally(() => setIsImageLoading(false))
+
+  const userHasSelected = Boolean(state.selectedProductId)
+  const isSelected = id === state.selectedProductId
+  const isCorrectAnswer =
+    state.selectedProductId && id === state.questions[questionResets].item_id
+
+  useEffect(() => {
+    api
+      .getProductPicture(id)
+      .then(setThumbnail)
+      .finally(() => setIsImageLoading(false))
+  }, [])
 
   return (
-    <div
-      key={id}
-      className={`z-10 relative min-w-[180px] select-none group
-              ${isVisible ? 'animate-enter' : 'animate-exit'} 
-               ${
-                 state.selectedProductId === id
-                   ? 'opacity-60 shadow-lg'
-                   : 'hover:shadow-lg'
-               }
-               ${!state.selectedProductId ? 'cursor-pointer' : ''}
-               `}
-      onClick={() => onProductSelection(id)}
-    >
-      {state.selectedProductId &&
-        id === state.questions[questionResets].item_id && (
-          <div className="absolute w-full h-full grid place-content-center pointer-events-none">
-            <span className="material-symbols-outlined scale-[4]">
+    <div className="h-[250px]">
+      <div
+        className={`relative w-[180px] transition-all group bg-white rounded-md overflow-hidden 
+        ${userHasSelected ? '' : 'cursor-pointer'}
+        ${
+          isSelected || isCorrectAnswer
+            ? 'shadow-lg'
+            : 'max-h-[180px] hover:max-h-[250px] shadow-sm hover:shadow-lg'
+        }
+        `}
+        onClick={() => !userHasSelected && onProductSelection(id)}
+      >
+        {isCorrectAnswer && (
+          <div className="absolute top-0 left-0 h-[180px] w-full flex justify-center items-center pointer-events-none">
+            <span
+              className={`material-symbols-outlined text-9xl ${
+                isCorrectAnswer && isSelected ? 'text-green-600' : ''
+              }`}
+            >
               check_circle
             </span>
           </div>
         )}
-      <div
-        className={`h-[180px] w-[180px] flex justify-center items-center border-b-[1px] border-gray-200 bg-white rounded-md group-hover:shadow-none overflow-hidden transition-all duration-100 
-        ${
-          state.selectedCategoryId
-            ? 'rounded-b-none'
-            : 'group-hover:rounded-b-none'
-        }`}
-      >
         {isImageLoading ? (
-          <LoadingSpinner />
+          <div className="w-full aspect-square grid place-content-center">
+            <LoadingSpinner />
+          </div>
         ) : (
           <img
-            className="h-full object-contain"
+            className={`w-full aspect-square object-contain 
+            ${isSelected || isCorrectAnswer ? 'opacity-30' : ''}`}
             src={thumbnail}
             alt={`Foto de ${title}`}
           />
         )}
-      </div>
-      <div
-        className={`-z-10 w-full absolute p-3 -mt-[70px] rounded-b-md bg-white transition-all duration-200 
-                  ${
-                    state.selectedProductId === id
-                      ? 'mt-0 shadow-lg'
-                      : 'group-hover:mt-0 group-hover:shadow-lg'
-                  }
-                  ${
-                    state.selectedProductId &&
-                    id === state.questions[questionResets].item_id
-                      ? 'mt-0 shadow-lg'
-                      : 'group-hover:mt-0 group-hover:shadow-lg'
-                  }
-                  `}
-      >
-        <p
-          className={`overflow-hidden max-h-10 text-ellipsis text-[13px] text-gray-600 transition-opacity transition-100 opacity-0 group-hover:opacity-100 group-hover:delay-200 delay-0 
-          ${state.selectedProductId === id ? 'opacity-100' : 'opacity-0'}
-          ${
-            state.selectedProductId &&
-            id === state.questions[questionResets].item_id
-              ? 'opacity-100'
-              : 'opacity-0'
-          }`}
+        <div
+          className={`transition-all duration-300 overflow-hidden 
+        ${
+          isSelected || isCorrectAnswer
+            ? 'max-h-14'
+            : 'max-h-0 group-hover:max-h-14'
+        }`}
         >
-          {title}
-        </p>
+          <div className="h-[1px] bg-gray-400/30" />
+          <div
+            className={`p-2 px-3 transition-all group-hover:delay-200 group-hover:duration-200 duration-100 text-ellipsis text-[13px] text-gray-600 
+          ${
+            isSelected || isCorrectAnswer
+              ? 'opacity-70'
+              : 'opacity-0 group-hover:opacity-100'
+          }`}
+          >
+            <p className="max-h-10 overflow-hidden">{title}</p>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
 
-export default Product
+export default ProductCard
