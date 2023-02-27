@@ -3,6 +3,7 @@ import { useGame } from '../../../context/GameContext'
 import Lock from './LockIcon'
 import Text from './Text'
 import { LoadingSpinner } from '../../../assets/Loading'
+import { useState } from 'react'
 
 type Props = {
   isLoading: boolean
@@ -10,16 +11,18 @@ type Props = {
 
 const QuestionSection = ({ isLoading }: Props) => {
   const { state, dispatch } = useGame()
+  const [animateRotate, setAnimateRotate] = useState(false)
 
   const handleResetQuestion = () => {
     dispatch({ type: 'question_next' })
-    // setAnimateRotation(true)
+    setAnimateRotate(true)
     setTimeout(() => {
-      // setAnimateRotation(false)
+      setAnimateRotate(false)
     }, 1000)
   }
 
   const currentQuestion = state.questions[state.questionResets]
+  const isNextQuestion = currentQuestion && state.questionResets < 2
 
   const renderChildren = () => {
     if (!currentQuestion) return <Lock />
@@ -39,7 +42,14 @@ const QuestionSection = ({ isLoading }: Props) => {
         <h3 className="font-medium pl-3">
           2. Hace click para revelar la pregunta:
         </h3>
-        <span className="material-symbols-outlined cursor-pointer select-none text-lg">
+        <span
+          className={`material-symbols-outlined cursor-pointer select-none text-lg transition-opacity duration-500 
+          ${animateRotate ? 'animate-rotate' : ''}
+          ${!isNextQuestion ? 'pointer-events-none opacity-0' : ''}
+          
+          `}
+          onClick={handleResetQuestion}
+        >
           refresh
         </span>
       </div>
