@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Emoji from '../Emoji'
 import HoverMessage from '../HoverMessage'
+import Score from '../Score'
 import Modal from './Modal'
 
 type Props = {}
@@ -24,19 +25,23 @@ const Navbar = (props: Props) => {
           </div>
         </Modal>
       )}
-      <nav className="bg-mercadolibre-primary grid grid-cols-3 items-center border-b-[1px] border-gray-300">
-        <div></div>
-        <div className="flex justify-center py-6">
+      <nav className="bg-mercadolibre-primary grid grid-rows-2 lg:grid-rows-1 lg:grid-flow-col border-b-[1px] border-gray-300 py-2 px-10 gap-y-2 text-md lg:text-lg">
+        <div className="row-start-2 lg:row-start-auto">
+          <Score />
+        </div>
+        <div className="row-start-1 flex lg:justify-center">
           <a className="font-sans flex gap-2 items-center" href="/">
             <img
               src="/mercadogame.svg"
               alt="mercadogame logo"
-              className="w-14 object-contain"
+              className="w-12 object-contain"
             />
-            <h1 className="text-5xl text-mercadolibre-logo">mercadogame</h1>
+            <h1 className="text-3xl lg:text-[42px] text-mercadolibre-logo">
+              mercadogame
+            </h1>
           </a>
         </div>
-        <div className="relative flex ml-auto px-10 gap-4">
+        <div className="row-start-1 relative flex ml-auto gap-4">
           <button
             className={`border-[1px] px-3 py-2 rounded-lg hover:border-mercadolibre-btn  
         ${
@@ -46,7 +51,7 @@ const Navbar = (props: Props) => {
         }`}
             onClick={() => setIsBtnClicked(true)}
           >
-            Tabla de posiciones
+            <span>Tabla de posiciones</span>
           </button>
         </div>
       </nav>
