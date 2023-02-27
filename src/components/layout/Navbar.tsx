@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Emoji } from 'react-apple-emojis'
 import { useLanguage } from '../../context/LanguageContext'
-import HoverMessage from './HoverMessage'
-import Popup from './Popup'
+
+import HoverMessage from '../HoverMessage'
+import Popup from './Modal'
 
 type Props = {}
 
@@ -80,7 +80,7 @@ const Navbar = (props: Props) => {
         <div className="flex justify-center">
           <h1 className="text-5xl p-6 text-mercadolibre-logo">
             <a className="font-sans flex gap-2" href="/">
-              <Emoji className="w-10 h-10" name="joystick" />
+
               <span>mercadogame</span>
             </a>
           </h1>

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Emoji } from 'react-apple-emojis'
 import { useGame } from '../context/GameContext'
 
 type Props = {
@@ -17,9 +16,7 @@ const Next = ({ onNextRound }: Props) => {
         className="select-none bg-white px-10 py-8 flex gap-2"
         onClick={onNextRound}
       >
-        <Emoji className="w-10" name="right-arrow"></Emoji>
-        <Emoji className="w-10" name="right-arrow"></Emoji>
-        <Emoji className="w-10" name="right-arrow"></Emoji>
+       
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 import api from './api'
 import { useEffect, useState } from 'react'
 
-import CategoriesSection from './components/categories/Section'
+import CategoriesSection from './components/categorySelector/Section'
 import QuestionSection from './components/question/Section'
 import ProductsSection from './components/products/Section'
 
@@ -9,7 +9,7 @@ import { useGame } from './context/GameContext'
 import Score from './components/Score'
 import Next from './components/Next'
 import Navbar from './components/layout/Navbar'
-import Popup from './components/layout/Popup'
+import Popup from './components/layout/Modal'
 import { useLanguage } from './context/LanguageContext'
 import Footer from './components/layout/Footer'
 import useLocalStorage from './hooks/useLocalStorage'
