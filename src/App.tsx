@@ -77,24 +77,13 @@ function App() {
       <main className="overflow-hidden h-screen gap-4 flex flex-col bg-mercadolibre-secondary">
         <Navbar />
         <div className="flex flex-col gap-4">
-          <CategoriesSection></CategoriesSection>
-          <QuestionSection isLoading={isLoading.question}>
-            <h3 className="font-medium pl-3">
-              2.Hace click para revelar la pregunta:
-            </h3>
-          </QuestionSection>
+          <CategoriesSection />
+          <QuestionSection isLoading={isLoading.question} />
           <ProductsSection
             isLoading={isLoading.products}
             setIsLoading={setIsLoading}
-          >
-            <h3 className="font-medium pl-3 w-[600px] mx-auto">
-              3.Analiza y elegi tu respuesta:
-            </h3>
-          </ProductsSection>
-          <section className="absolute top-64 h-[200px] w-full overflow-hidden">
-            <Score />
-            <Next onNextRound={handleNextRound} />
-          </section>
+          />
+          <Next onNextRound={handleNextRound} />
         </div>
         <Footer />
       </main>
