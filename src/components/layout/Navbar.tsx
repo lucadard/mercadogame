@@ -1,13 +1,7 @@
-import React, { useState } from 'react'
 import { useModal } from '../../hooks/useModal'
 import Button from '../Button'
 import Score from '../Score'
-
-const leaderboardModal = (
-  <div>
-    <p className="text-center">Nada que mostrar, todavia...</p>
-  </div>
-)
+import { Leaderboard } from './Leaderboard'
 
 const Navbar = () => {
   const setModal = useModal((state) => state.setModal)
@@ -36,7 +30,7 @@ const Navbar = () => {
       {/* leaderboard */}
       <div className="row-start-2 lg:row-start-1 place-self-end self-center">
         <Button
-          action={() => setModal(leaderboardModal)}
+          action={() => setModal(<Leaderboard />)}
           style={'dashed'}
           active={showModal}
         >
