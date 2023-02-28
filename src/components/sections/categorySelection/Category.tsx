@@ -7,7 +7,7 @@ import { icons } from './iconsData'
 type Props = {
   id: string
   name: string
-  onCategorySelection: (id: string) => void
+  onCategorySelection: () => void
 }
 
 const Category = ({ id, name, onCategorySelection }: Props) => {
@@ -28,7 +28,7 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
           ? 'hover:bg-blue-500 hover:text-white cursor-pointer'
           : id === selectedCategoryId && 'bg-blue-500 text-white'
       }`}
-      onClick={() => onCategorySelection(id)}
+      onClick={onCategorySelection}
     >
       {mounted ? (
         <>
