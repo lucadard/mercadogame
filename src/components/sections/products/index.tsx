@@ -32,7 +32,7 @@ const ProductsSection = ({ isLoading, setIsLoading }: Props) => {
 
   return (
     <section className="flex flex-col gap-2 mx-auto">
-      <h3 className="font-medium pl-3 w-full max-w-[600px] mx-auto mb-4">
+      <h3 className="font-medium pl-3 w-full max-w-[600px] mx-auto mb-7 md:mb-4">
         3. Analiza y elegi tu respuesta:
       </h3>
       <div className="grid grid-cols-2 lg:grid-flow-col auto-cols-min gap-4 mx-auto min-h-[250px]">
