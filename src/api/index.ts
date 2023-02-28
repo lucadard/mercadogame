@@ -2,7 +2,7 @@ import axios from 'axios'
 // import * as dotenv from 'dotenv'
 // dotenv.config()
 
-import { Category, Product, Question } from '../types'
+import { Category, Product, Question, Score } from '../types'
 
 export const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -12,20 +12,32 @@ export const getRandomInt = (min: number, max: number): number => {
 
 const bannedCategoriesId = ['MLA1743', 'MLA1574', 'MLA1459', 'MLA1540']
 
-const ML_SECRET_KEY = 'pnZrLhspqg9ktuzwRz7FmiR1rCrYuEKF'
+const ML_SECRET_KEY = import.meta.env.VITE_ML_CLIENT_SECRET
+const databaseUrl = import.meta.env.VITE_DB_URL
 
 const getWithAuth = (url: string, secretKey: string) =>
   axios.get(url, { headers: { Authorization: `Bearer ${secretKey}` } })
 
+let CATEGORIES: Category[] = []
+
 const fetchs = {
+  leaderboard: async (limit: number) => {
+    const { data } = (await axios.get(databaseUrl + '/leaderboard', {
+      params: {
+        limit
+      }
+    })) as { data: { leaderboard: Score[] } }
+    return data.leaderboard
+  },
   categories: async () => {
     const { data } = await getWithAuth(
       'https://api.mercadolibre.com/sites/MLA/categories',
       ML_SECRET_KEY
     )
-    return data.filter(
+    CATEGORIES = data.filter(
       (category: any) => !bannedCategoriesId.includes(category.id)
     )
+    return CATEGORIES
   },
   productsByCategoryId: async (category_id: string) => {
     const { data } = await getWithAuth(
@@ -46,13 +58,28 @@ const fetchs = {
 }
 
 export default {
-  getCategories: async (amount = 1): Promise<Category[]> => {
+  wakedb: async () => {
+    const { data } = await axios.get(databaseUrl + '/wake')
+    return data
+  },
+  getLeaderboard: async (limit = 10) => {
+    const leaderboard = await fetchs.leaderboard(limit)
+    return leaderboard
+  },
+  sendScore: async (body: { name: string; score: number }) => {
+    const score = await axios.post(databaseUrl + '/leaderboard', body)
+    return score
+  },
+  getCategories: async (amount = 1) => {
     if (amount < 1) return []
 
     const indexes: number[] = []
     const selectedCategories = []
 
-    const categories = await fetchs.categories()
+    const categories = !CATEGORIES.length
+      ? await fetchs.categories()
+      : CATEGORIES
+
     for (let i = 0; i < amount; i++) {
       const newIndex = getRandomInt(0, categories.length - 1)
       if (!indexes.includes(newIndex)) {
@@ -64,9 +91,9 @@ export default {
     return selectedCategories
   },
 
-  getAllCategories: async (): Promise<Category[]> => await fetchs.categories(),
+  getAllCategories: async () => await fetchs.categories(),
 
-  getProductDetails: async (permalink: string): Promise<any> =>
+  getProductDetails: async (permalink: string) =>
     await fetchs.productDetails(permalink),
 
   getProductsByCategoryId: async (
@@ -94,10 +121,7 @@ export default {
     return data.pictures[0].secure_url
   },
 
-  getQuestionsByProductId: async (
-    product_id: string,
-    amount = 1
-  ): Promise<Question[] | undefined> => {
+  getQuestionsByProductId: async (product_id: string, amount = 1) => {
     const ids: number[] = []
 
     const selectedQuestions: Question[] = []
