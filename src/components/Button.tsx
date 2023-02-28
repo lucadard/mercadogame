@@ -16,7 +16,7 @@ const styles = {
 }
 
 const activeStyles = {
-  default: '',
+  default: 'opacity-50 pointer-events-none cursor-not-allowed',
   dashed:
     'outline outline-mercadolibre-btn border-mercadolibre-btn !border-solid'
 }
