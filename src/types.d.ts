@@ -14,3 +14,8 @@ export type Question = {
   text: string
   item_id: string
 }
+
+export type Score = {
+  name: string
+  score: number
+}
