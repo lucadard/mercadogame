@@ -1,13 +1,22 @@
+import { useEffect } from 'react'
 import { useGame } from '../../../context/GameContext'
 import { Category as CategoryType } from '../../../types'
 import Category from './Category'
 
 const CategoriesSection = () => {
-  const { state, dispatch } = useGame()
+  const { state, dispatch, getCategories } = useGame()
 
+  useEffect(() => {
+    if (state.categories.length) return
+    getCategories(3).then((payload) =>
+      dispatch({ type: 'start_round', payload })
+    )
+  }, [state.categories])
+
+  const isCategorySelected = Boolean(state.selectedCategoryId)
   const handleCategorySelection = (id: string) => {
-    if (state.selectedCategoryId) return
-    dispatch({ type: 'set_category', payload: id })
+    if (isCategorySelected) return
+    dispatch({ type: 'select_category', payload: id })
   }
 
   return (
@@ -19,7 +28,7 @@ const CategoriesSection = () => {
             key={id}
             id={id}
             name={name}
-            onCategorySelection={handleCategorySelection}
+            onCategorySelection={() => handleCategorySelection(id)}
           />
         ))}
       </div>

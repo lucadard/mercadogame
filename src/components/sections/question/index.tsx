@@ -3,38 +3,52 @@ import { useGame } from '../../../context/GameContext'
 import Lock from './LockIcon'
 import Text from './Text'
 import { LoadingSpinner } from '../../../assets/Loading'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import api from '../../../api'
+import { useModal } from '../../../hooks/useModal'
 
-type Props = {
-  isLoading: boolean
-}
+const errorModal = (
+  <div className="flex flex-col gap-4 items-center">
+    <p className="text-center text-xl">Hubo un error y la ronda se reinició.</p>
+  </div>
+)
 
-const QuestionSection = ({ isLoading }: Props) => {
+const QuestionSection = () => {
   const { state, dispatch } = useGame()
+  const setModal = useModal((state) => state.setModal)
   const [animateRotate, setAnimateRotate] = useState(false)
 
+  useEffect(() => {
+    if (!state.products.length) return
+    const randomProduct =
+      state.products[Math.floor(Math.random() * state.products.length)]
+    api
+      .getQuestionsByProductId(randomProduct.id, 3)
+      .then((payload) => {
+        if (!payload) throw new Error('Not enough questions')
+        dispatch({ type: 'set_questions', payload })
+      })
+      .catch((err) => {
+        console.log(err.message)
+        dispatch({ type: 'restart_round' })
+        setModal(errorModal)
+      })
+  }, [state.products])
+
   const handleResetQuestion = () => {
-    dispatch({ type: 'question_next' })
+    dispatch({ type: 'next_question' })
     setAnimateRotate(true)
     setTimeout(() => {
       setAnimateRotate(false)
     }, 1000)
   }
 
-  const currentQuestion =
-    state.questions.length && state.questions[state.questionResets]
-  const isNextQuestion = currentQuestion && state.questionResets < 2
+  const isQuestion = state.questions.length
+  const isNextQuestion = state.questionResets && isQuestion
 
   const renderChildren = () => {
-    if (!currentQuestion) return <Lock />
-
-    return (
-      <Text
-        children={
-          isLoading ? <LoadingSpinner size={25} /> : currentQuestion.text
-        }
-      />
-    )
+    if (!isQuestion) return <Lock />
+    return <Text children={state.questions[state.currentQuestionIndex].text} />
   }
 
   return (

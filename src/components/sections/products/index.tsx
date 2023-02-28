@@ -1,33 +1,26 @@
 import { useEffect, useState } from 'react'
 import api from '../../../api'
 import { LoadingDots } from '../../../assets/Loading'
-import { State, useGame } from '../../../context/GameContext'
+import { useGame } from '../../../context/GameContext'
 import { Product as ProductType } from '../../../types'
 import ProductCard from './Product'
 
-type Props = {
-  isLoading: boolean
-  setIsLoading: any
-}
-
-const ProductsSection = ({ isLoading, setIsLoading }: Props) => {
+const ProductsSection = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const { state, dispatch } = useGame()
-
-  const getProducts = async (categoryId: string) => {
-    setIsLoading((prev: any) => ({ ...prev, products: true }))
-    const products = await api.getProductsByCategoryId(categoryId, 4)
-    dispatch({ type: 'set_products', payload: products })
-    setIsLoading((prev: any) => ({ ...prev, products: false }))
-  }
 
   useEffect(() => {
     if (!state.selectedCategoryId) return
-    getProducts(state.selectedCategoryId)
+    setIsLoading(true)
+    api
+      .getProductsByCategoryId(state.selectedCategoryId, 4)
+      .then((payload) => dispatch({ type: 'set_products', payload }))
+      .finally(() => setIsLoading(false))
   }, [state.selectedCategoryId])
 
   const handleProductSelection = (id: string) => {
     if (state.selectedProductId) return
-    dispatch({ type: 'choose_product', payload: id })
+    dispatch({ type: 'select_product', payload: id })
   }
 
   return (
