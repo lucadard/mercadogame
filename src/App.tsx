@@ -11,18 +11,10 @@ import Button from './components/Button'
 import { SubmitScore } from './components/layout/Leaderboard'
 import { useEffect } from 'react'
 import api from './api'
+import NextRoundButton from './components/layout/NextRoundButton'
 
 function App() {
-  const { state, dispatch } = useGame()
   const showModal = useModal((state) => state.showModal)
-  const setModal = useModal((state) => state.setModal)
-
-  async function handleNextRound() {
-    dispatch({ type: 'next_round', payload: true })
-  }
-  async function handleFinishGame() {
-    setModal(<SubmitScore />)
-  }
 
   useEffect(() => {
     console.log('Attempting to wake up db...')
@@ -43,22 +35,7 @@ function App() {
           <ProductsSection />
         </div>
         <div className="grid place-content-center mb-5">
-          {state.finished ? (
-            <Button
-              disabled={!Boolean(state.selectedProductId)}
-              active={showModal}
-              action={handleFinishGame}
-            >
-              <span>Finalizar juego</span>
-            </Button>
-          ) : (
-            <Button
-              disabled={!Boolean(state.selectedProductId)}
-              action={handleNextRound}
-            >
-              <span>Siguiente Ronda</span>
-            </Button>
-          )}
+          <NextRoundButton />
         </div>
       </main>
       <Footer />
