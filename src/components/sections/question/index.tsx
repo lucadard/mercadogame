@@ -21,7 +21,8 @@ const QuestionSection = ({ isLoading }: Props) => {
     }, 1000)
   }
 
-  const currentQuestion = state.questions[state.questionResets]
+  const currentQuestion =
+    state.questions.length && state.questions[state.questionResets]
   const isNextQuestion = currentQuestion && state.questionResets < 2
 
   const renderChildren = () => {
@@ -37,7 +38,7 @@ const QuestionSection = ({ isLoading }: Props) => {
   }
 
   return (
-    <section className="z-20 relative flex flex-col gap-2 max-w-[600px] mx-auto h-[100px] mb-4">
+    <section className="z-20 relative flex flex-col gap-2 max-w-[600px] mx-auto h-[100px] mb-9 md:mb-4">
       <div className="flex items-center gap-2">
         <h3 className="font-medium pl-3">
           2. Hace click para revelar la pregunta:
