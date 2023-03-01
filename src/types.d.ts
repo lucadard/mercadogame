@@ -7,6 +7,7 @@ export type Product = {
   title: string
   id: string
   permalink: string
+  thumbnail?: string
 }
 
 export type Question = {
