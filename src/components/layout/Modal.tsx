@@ -21,7 +21,7 @@ const Modal = () => {
         onClick={closeModal}
       />
       <div className="flex justify-center items-center -mt-[10vh] h-full pointer-events-none px-10">
-        <div className="relative w-full max-w-2xl rounded-md pointer-events-auto bg-white p-10 flex flex-col gap-4">
+        <div className="relative w-full max-w-3xl rounded-md pointer-events-auto bg-white p-10 flex flex-col gap-4">
           {modalComponent}
           <div className="mx-auto">
             <Button action={closeModal}>
