@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useModal } from '../../hooks/useModal'
 import Button from '../Button'
 
-type Props = {
-  closeMessage?: string
-}
-
-const Modal = ({ closeMessage = 'Cerrar' }: Props) => {
+const Modal = () => {
   const modalComponent = useModal((state) => state.component)
   const closeModal = useModal((state) => state.closeModal)
   const [mounted, setMounted] = useState(false)
@@ -24,12 +20,12 @@ const Modal = ({ closeMessage = 'Cerrar' }: Props) => {
         className="bg-black absolute bg-opacity-50 w-full h-full select-none"
         onClick={closeModal}
       />
-      <div className="relative z-10 h-full grid place-content-center -mt-32 pointer-events-none">
-        <div className="w-[500px] bg-white rounded-md flex flex-col justify-between items-center p-6 gap-4 pointer-events-auto">
+      <div className="flex justify-center items-center -mt-[10vh] h-full pointer-events-none px-10">
+        <div className="relative w-full max-w-2xl rounded-md pointer-events-auto bg-white p-10 flex flex-col gap-4">
           {modalComponent}
-          <div>
+          <div className="mx-auto">
             <Button action={closeModal}>
-              <span>{closeMessage}</span>
+              <span>Volver</span>
             </Button>
           </div>
         </div>
