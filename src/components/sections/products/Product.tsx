@@ -7,32 +7,38 @@ import { isMobile } from 'react-device-detect'
 type Props = {
   id: string
   title: string
-  state: State
+  index: number
   onProductSelection: (id: string) => void
 }
 
-const ProductCard = ({ id, title, state, onProductSelection }: Props) => {
-  const { questionResets } = useGame().state
-  const [isImageLoading, setIsImageLoading] = useState(true)
-  const [thumbnail, setThumbnail] = useState('')
+const ProductCard = ({ id, title, onProductSelection, index }: Props) => {
+  const { state, dispatch } = useGame()
+  const [isImageLoading, setIsImageLoading] = useState(
+    () => !state.products[index].thumbnail
+  )
 
   const userHasSelected = Boolean(state.selectedProductId)
   const isSelected = id === state.selectedProductId
   const isCorrectAnswer =
-    state.selectedProductId && id === state.questions[questionResets].item_id
+    state.selectedProductId &&
+    id === state.questions[state.questionResets].item_id
 
+  const isThumbnailFetched = state.products[index].thumbnail
   useEffect(() => {
+    if (isThumbnailFetched) return
     api
       .getProductPicture(id)
-      .then(setThumbnail)
+      .then((url) =>
+        dispatch({ type: 'set_product_thumbnail', payload: { index, url } })
+      )
       .finally(() => setIsImageLoading(false))
-  }, [])
+  }, [id])
 
   return (
     <div className="h-[220px] sm:h-[250px] w-[140px] sm:w-[180px]">
       {isImageLoading ? (
         <div className="w-full aspect-square grid place-content-center">
-          <LoadingSpinner size={50}/>
+          <LoadingSpinner size={50} />
         </div>
       ) : (
         <div
@@ -61,7 +67,7 @@ const ProductCard = ({ id, title, state, onProductSelection }: Props) => {
           <img
             className={`w-full aspect-square object-contain 
             ${isSelected || isCorrectAnswer ? 'opacity-30' : ''}`}
-            src={thumbnail}
+            src={state.products[index].thumbnail}
             alt={`Foto de ${title}`}
           />
           <div

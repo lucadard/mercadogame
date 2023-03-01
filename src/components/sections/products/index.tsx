@@ -10,7 +10,7 @@ const ProductsSection = () => {
   const { state, dispatch } = useGame()
 
   useEffect(() => {
-    if (!state.selectedCategoryId) return
+    if (!state.selectedCategoryId || state.products.length) return
     setIsLoading(true)
     api
       .getProductsByCategoryId(state.selectedCategoryId, 4)
@@ -34,13 +34,13 @@ const ProductsSection = () => {
             <LoadingDots />
           </div>
         ) : (
-          state.products.map(({ id, title }: ProductType) => {
+          state.products.map(({ id, title }: ProductType, index) => {
             return (
               <ProductCard
                 key={id}
                 id={id}
+                index={index}
                 title={title}
-                state={state}
                 onProductSelection={handleProductSelection}
               />
             )
