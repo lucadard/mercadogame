@@ -10,8 +10,9 @@ type Props = {
   onCategorySelection: () => void
 }
 
-const Category = ({ id, name, onCategorySelection }: Props) => {
-  const [mounted, setMounted] = useState(false)
+const CategoryCard = ({ id, name, onCategorySelection }: Props) => {
+  const { state } = useGame()
+  const [mounted, setMounted] = useState(Boolean(state.selectedCategoryId))
   const { selectedCategoryId } = useGame().state
 
   useEffect(() => {
@@ -46,4 +47,4 @@ const Category = ({ id, name, onCategorySelection }: Props) => {
   )
 }
 
-export default Category
+export default CategoryCard
