@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'wouter'
 import api from '../../api'
-import { LoadingDots } from '../../assets/Loading'
+import { LoadingDots, LoadingSpinner } from '../../assets/Loading'
 import { useGame } from '../../context/GameContext'
 import { useModal } from '../../hooks/useModal'
 import { Score } from '../../types'
@@ -11,6 +11,8 @@ import SingleCharacterInputForm from '../SingleCharacterInputForm'
 export const SubmitScore = () => {
   const { state, dispatch } = useGame()
   const closeModal = useModal((state) => state.closeModal)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   function handleRestartGame() {
     dispatch({ type: 'restart_game' })
@@ -18,12 +20,17 @@ export const SubmitScore = () => {
   }
 
   async function handleSubmit(value: string) {
-    if (value === '') return
+    if (value === '' || isLoading) return
     try {
+      setIsLoading(true)
       await api.sendScore({ name: value, score: state.score.total })
       console.log('Score submited!')
+      setIsLoading(false)
     } catch (err) {
-      console.error('Error while submitting score :(')
+      setError(
+        'No nos pudimos conectar con el servidor, podés intentar otra vez.'
+      )
+      console.error('Error while submitting score.')
     }
     handleRestartGame()
   }
@@ -36,14 +43,17 @@ export const SubmitScore = () => {
       <SingleCharacterInputForm
         length={5}
         onSubmit={handleSubmit}
-        formStyles={'flex gap-4'}
+        formStyles={'flex gap-2 items-center'}
       >
-        <Button>
-          <span>Enviar</span>
+        <Button disabled={isLoading}>
+          <div className="w-12 h-6 grid place-content-center">
+            {isLoading ? <LoadingSpinner /> : <span>Enviar</span>}
+          </div>
         </Button>
       </SingleCharacterInputForm>
+      {error && <p className="text-center text-red-600">{error}</p>}
       <p>Sino, podés jugar de nuevo</p>
-      <Button action={handleRestartGame}>
+      <Button action={handleRestartGame} disabled={isLoading}>
         <span>Reiniciar juego</span>
       </Button>
     </div>
