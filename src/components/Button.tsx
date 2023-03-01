@@ -2,7 +2,7 @@ import React from 'react'
 
 type Props = {
   disabled?: boolean
-  action?: () => void
+  action?: (() => void) | null
   children: React.ReactNode
   style?: 'default' | 'dashed'
   active?: boolean
@@ -23,7 +23,7 @@ const activeStyles = {
 
 const Button = ({
   disabled = false,
-  action = () => null,
+  action = null,
   children,
   style = 'default',
   active = false
@@ -38,7 +38,7 @@ const Button = ({
           ? 'opacity-50 pointer-events-none cursor-not-allowed'
           : 'cursor-pointer'
       }`}
-      onClick={action}
+      onClick={() => action && action()}
     >
       {children}
     </button>
