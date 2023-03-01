@@ -2,7 +2,6 @@ import { useGame } from '../../../context/GameContext'
 
 import Lock from './LockIcon'
 import Text from './Text'
-import { LoadingSpinner } from '../../../assets/Loading'
 import { useEffect, useState } from 'react'
 import api from '../../../api'
 import { useModal } from '../../../hooks/useModal'
@@ -19,7 +18,7 @@ const QuestionSection = () => {
   const [animateRotate, setAnimateRotate] = useState(false)
 
   useEffect(() => {
-    if (!state.products.length) return
+    if (!state.products.length || state.questions.length) return
     const randomProduct =
       state.products[Math.floor(Math.random() * state.products.length)]
     api
@@ -29,12 +28,13 @@ const QuestionSection = () => {
         dispatch({ type: 'set_questions', payload })
       })
       .catch((err) => {
-        console.log(err.message)
+        console.error(err.message)
         dispatch({ type: 'restart_round' })
         setModal(errorModal)
       })
-  }, [state.products])
+  }, [state.products.length])
 
+  const isRoundFinished = Boolean(state.selectedProductId)
   const handleResetQuestion = () => {
     dispatch({ type: 'next_question' })
     setAnimateRotate(true)
@@ -60,7 +60,7 @@ const QuestionSection = () => {
         <span
           className={`material-symbols-outlined cursor-pointer select-none text-lg transition-opacity duration-500 
           ${animateRotate ? 'animate-rotate' : ''}
-          ${!isNextQuestion ? 'pointer-events-none opacity-0' : ''}
+          ${!isNextQuestion || isRoundFinished ? 'pointer-events-none opacity-0' : ''}
           
           `}
           onClick={handleResetQuestion}
