@@ -109,7 +109,7 @@ export default {
     for (let i = 0; i < amount; i++) {
       const newIndex = getRandomInt(0, products.length - 1)
       if (!titles.includes(products[newIndex].title)) {
-        selectedProducts.push(products[newIndex])
+        selectedProducts.push({ ...products[newIndex], thumbnail: undefined })
         titles.push(products[newIndex].title)
       } else i--
     }
