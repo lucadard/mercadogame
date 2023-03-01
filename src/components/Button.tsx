@@ -30,7 +30,7 @@ const Button = ({
 }: Props) => {
   return (
     <button
-      className={`py-2 px-3 rounded-lg 
+      className={`h-min py-2 px-3 rounded-lg 
       ${styles[style]} 
       ${active ? activeStyles[style] : ''}
       ${

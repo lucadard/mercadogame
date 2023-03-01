@@ -39,6 +39,8 @@ const SingleCharacterInputForm = ({
       <input
         key={i}
         type="text"
+        autoComplete="off"
+        autoFocus={i === 0}
         maxLength={1}
         name={i.toString()}
         className="w-5 text-3xl h-full border-b-2 border-black outline-none"
