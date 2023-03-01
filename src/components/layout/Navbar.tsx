@@ -1,22 +1,22 @@
+import { Link, useLocation } from 'wouter'
 import { useModal } from '../../hooks/useModal'
 import Button from '../Button'
 import Score from '../Score'
 import { Leaderboard } from './Leaderboard'
 
 const Navbar = () => {
-  const setModal = useModal((state) => state.setModal)
-  const showModal = useModal((state) => state.showModal)
+  const [location, setLocation] = useLocation()
 
   return (
-    <nav className="w-full bg-mercadolibre-primary grid grid-rows-2 lg:grid-rows-1 lg:grid-flow-col border-b-[1px] border-gray-300 py-2 px-10 gap-x-4 text-md lg:text-lg">
+    <nav className="bg-mercadolibre-primary grid grid-rows-2 lg:grid-rows-1 grid-cols-2 lg:grid-cols-4 py-2 px-10 text-md lg:text-lg border-b-[1px] border-gray-300">
       {/* score */}
-      <div className="row-start-2 lg:row-start-auto flex items-center">
+      <div className="row-start-2 lg:row-start-1 col-start-1 flex items-center">
         <Score />
       </div>
       {/* logo */}
       <a
-        className="row-start-1 col-span-2 font-sans flex gap-2 items-center lg:justify-self-center"
         href="/"
+        className="row-start-1 col-span-2 font-sans flex gap-2 items-center lg:justify-self-center"
       >
         <img
           src="/mercadogame.svg"
@@ -28,11 +28,11 @@ const Navbar = () => {
         </h1>
       </a>
       {/* leaderboard */}
-      <div className="row-start-2 lg:row-start-1 place-self-end self-center">
+      <div className="row-start-2 lg:row-start-1 col-start-2 lg:col-start-4 place-self-end self-center">
         <Button
-          action={() => setModal(<Leaderboard />)}
+          action={() => setLocation('/leaderboard')}
           style={'dashed'}
-          active={showModal}
+          active={location === '/leaderboard'}
         >
           <span>Tabla de posiciones</span>
         </Button>
