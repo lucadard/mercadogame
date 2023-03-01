@@ -57,14 +57,19 @@ function getNumberWithOrdinal(n: number) {
 }
 
 export const Leaderboard = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [leaderboard, setLeaderboard] = useState<Score[]>([])
+  const [error, setError] = useState('')
   useEffect(() => {
-    setIsLoading(true)
+    // setIsLoading(true)
     api
       .getLeaderboard()
       .then(setLeaderboard)
       .finally(() => setIsLoading(false))
+      .catch((err) => {
+        setError('Error comunicándose con el servidor.')
+        console.error('Could not fetch leaderboard.')
+      })
   }, [])
 
   return (
@@ -72,32 +77,40 @@ export const Leaderboard = () => {
       <Link href="/">
         <a className="text-[#515151]">{'<'} Volver</a>
       </Link>
-      <h2 className="text-[#515151] text-xl lg:text-2xl font-extralight mt-4 mb-4">
-        High scores
-      </h2>
-      {!isLoading ? (
-        <table className="uppercase text-center text-xl lg:text-2xl w-full bg-white rounded-md outline outline-[1px] outline-gray-100 shadow-sm hover:shadow-lg">
-          <thead>
-            <tr className="h-14 font-semibold">
-              <th>rank</th>
-              <th>name</th>
-              <th>score</th>
-            </tr>
-          </thead>
-          <tbody className="text-[#515151]">
-            {leaderboard.map((item, i) => (
-              <tr key={i} className="border-t-[1px] border-gray-100 h-14">
-                <td>{getNumberWithOrdinal(i + 1)}</td>
-                <td>{item.name}</td>
-                <td>{item.score}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <div className="w-full py-20 flex justify-center">
-          <LoadingDots />
+      {error ? (
+        <div>
+          <p className="text-2xl text-red-600 text-center mt-10">{error}</p>
         </div>
+      ) : (
+        <>
+          <h2 className="text-[#515151] text-xl lg:text-2xl font-extralight mt-4 mb-4">
+            High scores
+          </h2>
+          {!isLoading ? (
+            <table className="uppercase text-center text-xl lg:text-2xl w-full bg-white rounded-md outline outline-[1px] outline-gray-100 shadow-sm hover:shadow-lg">
+              <thead>
+                <tr className="h-14 font-semibold">
+                  <th>rank</th>
+                  <th>name</th>
+                  <th>score</th>
+                </tr>
+              </thead>
+              <tbody className="text-[#515151]">
+                {leaderboard.map((item, i) => (
+                  <tr key={i} className="border-t-[1px] border-gray-100 h-14">
+                    <td>{getNumberWithOrdinal(i + 1)}</td>
+                    <td>{item.name}</td>
+                    <td>{item.score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="w-full py-20 flex justify-center">
+              <LoadingDots />
+            </div>
+          )}
+        </>
       )}
     </div>
   )
