@@ -70,7 +70,6 @@ const fetchs = {
 export default {
   getLeaderboard: async (limit = 10) => {
     const results: ExecutedQuery = await conn.execute('SELECT * FROM leaderboard ORDER BY score DESC')
-    console.log(results)
     return results.rows as Score[]
   },
   sendScore: async ({ name, score }: { name: string, score: number }) => {
