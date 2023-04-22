@@ -97,7 +97,7 @@ export const Leaderboard = () => {
   }, [])
 
   return (
-    <div className='mx-auto mt-2 w-full max-w-4xl px-10'>
+    <div className='mx-auto mt-2 w-full max-w-4xl px-10 pb-10'>
       <Link href='/'>
         <a className='text-[#515151]'>{'<'} Volver</a>
       </Link>
@@ -120,6 +120,7 @@ export const Leaderboard = () => {
                       <th>rank</th>
                       <th>name</th>
                       <th>score</th>
+                      {/* <th>date</th> */}
                     </tr>
                   </thead>
                   <tbody className='text-[#515151]'>
@@ -128,6 +129,7 @@ export const Leaderboard = () => {
                         <td>{getNumberWithOrdinal(i + 1)}</td>
                         <td>{item.name}</td>
                         <td>{item.score}</td>
+                        {/* <td>{new Date(item.createdAt).toLocaleDateString()}</td> */}
                       </tr>
                     ))}
                   </tbody>
