@@ -19,4 +19,5 @@ export type Question = {
 export type Score = {
   name: string
   score: number
+  createdAt: string
 }
