@@ -4,16 +4,16 @@ import useCategories from '../hooks/useCategories'
 import { Category, Product, Question } from '../types'
 
 type Action =
-  | { type: 'start_round'; payload: Category[] }
-  | { type: 'select_category'; payload: Category['id'] }
-  | { type: 'set_products'; payload: Product[] }
-  | { type: 'set_product_thumbnail'; payload: { index: number; url: string } }
-  | { type: 'set_questions'; payload: Question[] }
+  | { type: 'start_round', payload: Category[] }
+  | { type: 'select_category', payload: Category['id'] }
+  | { type: 'set_products', payload: Product[] }
+  | { type: 'set_product_thumbnail', payload: { index: number, url: string } }
+  | { type: 'set_questions', payload: Question[] }
   | { type: 'next_question' }
-  | { type: 'select_product'; payload: Product['id'] }
+  | { type: 'select_product', payload: Product['id'] }
   | { type: 'restart_round' }
   | { type: 'restart_game' }
-  | { type: 'next_round'; payload: boolean }
+  | { type: 'next_round', payload: boolean }
 type Dispatch = (action: Action) => void
 export type State = {
   categories: Category[]
@@ -24,21 +24,21 @@ export type State = {
   currentQuestionIndex: number
   questionResets: number
   round: number
-  score: { correct: number; wrong: number; total: number }
+  score: { correct: number, wrong: number, total: number }
   finished: boolean
 }
 type GameProviderProps = { children: React.ReactNode }
 
 const GameStateContext = React.createContext<
-  | {
-      state: State
-      dispatch: Dispatch
-      getCategories: (amount: number) => Promise<Category[]>
-    }
-  | undefined
+| {
+  state: State
+  dispatch: Dispatch
+  getCategories: (amount: number) => Promise<Category[]>
+}
+| undefined
 >(undefined)
 
-function gameReducer(state: State, action: Action): State {
+function gameReducer (state: State, action: Action): State {
   switch (action.type) {
     case 'start_round': {
       return {
@@ -123,7 +123,7 @@ function gameReducer(state: State, action: Action): State {
       }
     }
     default: {
-      throw new Error(`Unhandled action type`)
+      throw new Error('Unhandled action type')
     }
   }
 }
@@ -143,7 +143,7 @@ const INITIAL_STATE: State = {
 
 const ROUNDS = 10
 
-function GameProvider({ children }: GameProviderProps) {
+function GameProvider ({ children }: GameProviderProps) {
   const { getCategories } = useCategories()
   const [state, dispatch] = React.useReducer(gameReducer, INITIAL_STATE)
   const value = { state, dispatch, getCategories }
@@ -154,7 +154,7 @@ function GameProvider({ children }: GameProviderProps) {
   )
 }
 
-function useGame() {
+function useGame () {
   const context = React.useContext(GameStateContext)
   if (context === undefined) {
     throw new Error('useGame must be used within a GameProvider')
