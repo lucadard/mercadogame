@@ -6,6 +6,7 @@ type Props = {
   children: React.ReactNode
   style?: 'default' | 'dashed'
   active?: boolean
+  size?: 'md' | 'lg'
 }
 
 const styles = {
@@ -21,23 +22,31 @@ const activeStyles = {
     'outline outline-mercadolibre-btn border-mercadolibre-btn !border-solid'
 }
 
+const sizeStyles = {
+  md: '',
+  lg: 'text-2xl px-4'
+}
+
 const Button = ({
   disabled = false,
   action = null,
   children,
   style = 'default',
-  active = false
+  active = false,
+  size = 'md'
 }: Props) => {
   return (
     <button
-      className={`h-min py-2 px-3 rounded-lg 
+      className={`h-min rounded-lg px-3 py-2 
       ${styles[style]} 
+      ${sizeStyles[size]} 
       ${active ? activeStyles[style] : ''}
       ${
         disabled
-          ? 'opacity-50 pointer-events-none cursor-not-allowed'
+          ? 'pointer-events-none cursor-not-allowed opacity-50'
           : 'cursor-pointer'
       }`}
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       onClick={() => action && action()}
     >
       {children}
