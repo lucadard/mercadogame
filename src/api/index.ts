@@ -1,8 +1,7 @@
 import axios from 'axios'
-// import * as dotenv from 'dotenv'
-// dotenv.config()
-
 import { Category, Product, Question, Score } from '../types'
+import { connect } from '@planetscale/database'
+import { type ExecutedQuery } from '@planetscale/database'
 
 export const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -12,21 +11,32 @@ export const getRandomInt = (min: number, max: number): number => {
 
 const bannedCategoriesId = ['MLA1743', 'MLA1574', 'MLA1459', 'MLA1540']
 
-const ML_SECRET_KEY = import.meta.env.VITE_ML_CLIENT_SECRET
-const databaseUrl = import.meta.env.VITE_DB_URL
+const ML_SECRET_KEY = import.meta.env.VITE_ML_CLIENT_SECRET as string
+const databaseUrl = import.meta.env.VITE_DB_URL as string
 
-const getWithAuth = (url: string, secretKey: string) =>
-  axios.get(url, { headers: { Authorization: `Bearer ${secretKey}` } })
+const DATABASE_HOST = import.meta.env.VITE_DATABASE_HOST as string
+const DATABASE_USERNAME = import.meta.env.VITE_DATABASE_USERNAME as string
+const DATABASE_PASSWORD = import.meta.env.VITE_DATABASE_PASSWORD as string
+
+const config = {
+  host: DATABASE_HOST,
+  username: DATABASE_USERNAME,
+  password: DATABASE_PASSWORD
+}
+const conn = connect(config)
+
+const getWithAuth = async (url: string, secretKey: string) =>
+  await axios.get(url, { headers: { Authorization: `Bearer ${secretKey}` } })
 
 let CATEGORIES: Category[] = []
 
 const fetchs = {
   leaderboard: async (limit: number) => {
-    const { data } = (await axios.get(databaseUrl + '/leaderboard', {
+    const { data } = (await axios.get(`${databaseUrl}/leaderboard`, {
       params: {
         limit
       }
-    })) as { data: { leaderboard: Score[] } }
+    }))
     return data.leaderboard
   },
   categories: async () => {
@@ -39,9 +49,9 @@ const fetchs = {
     )
     return CATEGORIES
   },
-  productsByCategoryId: async (category_id: string) => {
+  productsByCategoryId: async (categoryId: string) => {
     const { data } = await getWithAuth(
-      `https://api.mercadolibre.com/sites/MLA/search?category=${category_id}`,
+      `https://api.mercadolibre.com/sites/MLA/search?category=${categoryId}`,
       ML_SECRET_KEY
     )
     return data.results
@@ -50,25 +60,26 @@ const fetchs = {
     const data = await fetch(permalink)
     return data
   },
-  questionsByProductId: async (product_id: string): Promise<Question[]> => {
-    const url = `https://api.mercadolibre.com/questions/search?item=${product_id}`
+  questionsByProductId: async (productId: string): Promise<Question[]> => {
+    const url = `https://api.mercadolibre.com/questions/search?item=${productId}`
     const { data } = await axios.get(url)
     return data.questions
   }
 }
 
 export default {
-  wakedb: async () => {
-    const { data } = await axios.get(databaseUrl + '/wake')
-    return data
-  },
   getLeaderboard: async (limit = 10) => {
-    const leaderboard = await fetchs.leaderboard(limit)
-    return leaderboard
+    const results: ExecutedQuery = await conn.execute('SELECT * FROM leaderboard ORDER BY score DESC')
+    console.log(results)
+    return results.rows as Score[]
   },
-  sendScore: async (body: { name: string; score: number }) => {
-    const score = await axios.post(databaseUrl + '/leaderboard', body)
-    return score
+  sendScore: async ({ name, score }: { name: string, score: number }) => {
+    const query = 'INSERT INTO leaderboard (`name`, `score`) VALUES (:name, :score)'
+    const params = {
+      name,
+      score
+    }
+    return await conn.execute(query, params)
   },
   getCategories: async (amount = 1) => {
     if (amount < 1) return []
@@ -97,7 +108,7 @@ export default {
     await fetchs.productDetails(permalink),
 
   getProductsByCategoryId: async (
-    category_id: string,
+    categoryId: string,
     amount = 1
   ): Promise<Product[]> => {
     if (amount < 1) return []
@@ -105,7 +116,7 @@ export default {
     const titles: number[] = []
 
     const selectedProducts: Product[] = []
-    const products = await fetchs.productsByCategoryId(category_id)
+    const products = await fetchs.productsByCategoryId(categoryId)
     for (let i = 0; i < amount; i++) {
       const newIndex = getRandomInt(0, products.length - 1)
       if (!titles.includes(products[newIndex].title)) {
@@ -115,17 +126,17 @@ export default {
     }
     return selectedProducts
   },
-  getProductPicture: async (product_id: string) => {
-    const url = `https://api.mercadolibre.com/items/${product_id}/`
+  getProductPicture: async (productId: string) => {
+    const url = `https://api.mercadolibre.com/items/${productId}/`
     const { data } = await axios.get(url)
     return data.pictures[0].secure_url
   },
 
-  getQuestionsByProductId: async (product_id: string, amount = 1) => {
+  getQuestionsByProductId: async (productId: string, amount = 1) => {
     const ids: number[] = []
 
     const selectedQuestions: Question[] = []
-    const questions = await fetchs.questionsByProductId(product_id)
+    const questions = await fetchs.questionsByProductId(productId)
     if (questions.length < amount) return undefined
 
     for (let i = 0; i < amount; i++) {
