@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useEffect, useState } from 'react'
 import { Link } from 'wouter'
 import api from '../../api'
@@ -6,54 +7,67 @@ import { useGame } from '../../context/GameContext'
 import { useModal } from '../../hooks/useModal'
 import { type Score } from '../../types'
 import Button from '../Button'
-import SingleCharacterInputForm from '../SingleCharacterInputForm'
 
 export const SubmitScore = () => {
   const { state, dispatch } = useGame()
   const closeModal = useModal((state) => state.closeModal)
+  const [scoreName, setScoreName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [isAlreadySubmitted, setIsAlreadySubmitted] = useState(false)
+  const [message, setMessage] = useState<{ type: 'error' | 'success', content: string }>()
 
   function handleRestartGame () {
     dispatch({ type: 'restart_game' })
     closeModal()
   }
 
-  async function handleSubmit (value: string) {
-    if (value === '' || isLoading) return
+  async function handleSubmit (event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (scoreName === '' || isLoading) return setMessage({ type: 'error', content: 'No puede estar vacío.' })
     try {
       setIsLoading(true)
-      await api.sendScore({ name: value, score: state.score.total })
-      console.log('Score submited!')
+      await api.sendScore({ name: scoreName.slice(0, 4), score: state.score.total })
       setIsLoading(false)
+      setMessage({ type: 'success', content: 'Puntuación enviada!' })
+      setScoreName('')
+      setIsAlreadySubmitted(true)
     } catch (err) {
-      setError(
-        'No nos pudimos conectar con el servidor, podés intentar otra vez.'
-      )
-      console.error('Error while submitting score.')
+      setIsLoading(false)
+      setMessage({ type: 'error', content: 'Ocurrió un error. Intentá otra vez.' })
     }
-    handleRestartGame()
   }
+
   return (
-    <div className='flex flex-col items-center gap-2'>
-      <p>
-        Tu puntuacion es de <span>{state.score.total}</span> puntos
+    <div className='flex flex-col items-center gap-8'>
+      <p className='text-center text-2xl'>
+        Tu puntuacion es de <span className='text-3xl font-bold'>{state.score.total}</span> puntos
       </p>
-      <p>Ingresa tu nombre:</p>
-      <SingleCharacterInputForm
-        length={5}
-        onSubmit={handleSubmit}
-        formStyles='flex gap-2 items-center'
-      >
-        <Button disabled={isLoading}>
-          <div className='grid h-6 w-12 place-content-center'>
-            {isLoading ? <LoadingSpinner /> : <span>Enviar</span>}
-          </div>
-        </Button>
-      </SingleCharacterInputForm>
-      {error && <p className='text-center text-red-600'>{error}</p>}
-      <p>Sino, podés jugar de nuevo</p>
-      <Button action={handleRestartGame} disabled={isLoading}>
+      <div>
+        {!isAlreadySubmitted &&
+          <form onSubmit={handleSubmit} className='md:flex md:items-center md:gap-2'>
+            <label className='block text-lg md:flex md:items-baseline md:gap-2'>
+              <p>Ingresa tu nombre:</p>
+              <div className='relative my-2 flex flex-col md:my-0'>
+                <input
+                  type='text'
+                  className='border py-2 pl-2'
+                  value={scoreName}
+                  onChange={(e) => {
+                    setMessage(undefined)
+                    setScoreName(e.target.value.toUpperCase().slice(0, 4))
+                  }}
+                />
+              </div>
+            </label>
+            <Button disabled={isLoading}>
+              <div className='grid h-6 w-12 place-content-center'>
+                {isLoading ? <LoadingSpinner /> : <span>Enviar</span>}
+              </div>
+            </Button>
+          </form>}
+        {message && <p className={`mt-2 text-center text-lg ${message.type === 'error' ? 'text-red-600' : 'text-green-600'}`}>{message.content}</p>}
+      </div>
+      <Button action={handleRestartGame} disabled={isLoading} size='lg'>
         <span>Reiniciar juego</span>
       </Button>
     </div>
