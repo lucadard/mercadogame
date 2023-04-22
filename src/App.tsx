@@ -5,8 +5,15 @@ import NextRoundButton from './components/layout/NextRoundButton'
 import { Route } from 'wouter'
 import { Leaderboard } from './components/layout/Leaderboard'
 import PageLayout from './PageLayout'
-
+import { useEffect } from 'react'
+import { useGame } from './context/GameContext'
+import { animateScroll as scroll } from 'react-scroll'
 function App () {
+  const { state } = useGame()
+  useEffect(() => {
+    scroll.scrollToTop({ duration: 500 })
+  }, [state.round])
+
   return (
     <PageLayout>
       <Route path='/'>
