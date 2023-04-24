@@ -7,8 +7,8 @@ import api from '../../../api'
 import { useModal } from '../../../hooks/useModal'
 
 const errorModal = (
-  <div className="flex flex-col gap-4 items-center">
-    <p className="text-center text-xl">Hubo un error y la ronda se reinició.</p>
+  <div className='flex flex-col items-center gap-4'>
+    <p className='text-center text-xl'>Ningún producto tiene suficientes preguntas para poder jugar, se va a reiniciar la ronda.</p>
   </div>
 )
 
@@ -18,20 +18,30 @@ const QuestionSection = () => {
   const [animateRotate, setAnimateRotate] = useState(false)
 
   useEffect(() => {
+    const selectedProductsId: string[] = []
     if (!state.products.length || state.questions.length) return
-    const randomProduct =
-      state.products[Math.floor(Math.random() * state.products.length)]
-    api
-      .getQuestionsByProductId(randomProduct.id, 3)
-      .then((payload) => {
-        if (!payload) throw new Error('Not enough questions')
+
+    async function fetchQuestions () {
+      const filteredProducts = state.products.filter(p => !selectedProductsId.includes(p.id))
+      const randomProduct = filteredProducts[Math.floor(Math.random() * filteredProducts.length)]
+      selectedProductsId.push(randomProduct.id)
+      const questions = await api.getQuestionsByProductId(randomProduct.id, 3)
+      if (!questions) throw new Error(`Not enough questions in product ${randomProduct.id}`)
+      return questions
+    }
+    async function fetchRepeatedly () {
+      try {
+        const payload = await fetchQuestions()
         dispatch({ type: 'set_questions', payload })
-      })
-      .catch((err) => {
-        console.error(err.message)
-        dispatch({ type: 'restart_round' })
-        setModal(errorModal)
-      })
+      } catch (err) {
+        if (selectedProductsId.length === state.products.length) {
+          dispatch({ type: 'restart_round' })
+          setModal(errorModal)
+          console.error('No product has questions', err)
+        } else await fetchRepeatedly()
+      }
+    }
+    void fetchRepeatedly()
   }, [state.products.length])
 
   const isRoundFinished = Boolean(state.selectedProductId)
@@ -48,13 +58,13 @@ const QuestionSection = () => {
 
   const renderChildren = () => {
     if (!isQuestion) return <Lock />
-    return <Text children={state.questions[state.currentQuestionIndex].text} />
+    return <Text>{state.questions[state.currentQuestionIndex].text}</Text>
   }
 
   return (
-    <section className="z-20 relative flex flex-col gap-2 max-w-[600px] mx-auto h-[100px] mb-9 md:mb-4">
-      <div className="flex items-center gap-2">
-        <h3 className="font-medium pl-3">
+    <section className='relative z-20 mx-auto mb-9 flex h-[100px] max-w-[600px] flex-col gap-2 md:mb-4'>
+      <div className='flex items-center gap-2'>
+        <h3 className='pl-3 font-medium'>
           2. Hace click para revelar la pregunta:
         </h3>
         <span
@@ -68,7 +78,7 @@ const QuestionSection = () => {
           refresh
         </span>
       </div>
-      <div className="min-h-[62px]">{renderChildren()}</div>
+      <div className='min-h-[62px]'>{renderChildren()}</div>
     </section>
   )
 }
