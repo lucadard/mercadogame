@@ -24,28 +24,30 @@ const ProductsSection = () => {
   }
 
   return (
-    <section className="flex flex-col gap-2 mx-auto">
-      <h3 className="font-medium pl-3 w-full max-w-[600px] mx-auto mb-7 md:mb-4">
+    <section className='mx-auto flex flex-col gap-2'>
+      <h3 className='mx-auto mb-7 w-full max-w-[600px] pl-3 font-medium md:mb-4'>
         3. Analiza y elegi tu respuesta:
       </h3>
-      <div className="grid grid-cols-2 lg:grid-flow-col auto-cols-min gap-4 mx-auto min-h-[250px]">
-        {isLoading ? (
-          <div className="col-span-full row-span-full flex justify-center items-center">
-            <LoadingDots />
-          </div>
-        ) : (
-          state.products.map(({ id, title }: ProductType, index) => {
-            return (
-              <ProductCard
-                key={id}
-                id={id}
-                index={index}
-                title={title}
-                onProductSelection={handleProductSelection}
-              />
+      <div className='mx-auto grid min-h-[250px] auto-cols-min grid-cols-2 gap-4 lg:grid-flow-col'>
+        {isLoading
+          ? (
+            <div className='col-span-full row-span-full flex items-center justify-center'>
+              <LoadingDots />
+            </div>
             )
-          })
-        )}
+          : (
+              state.products.map(({ id, title }: ProductType, index) => {
+                return (
+                  <ProductCard
+                    key={id}
+                    id={id}
+                    index={index}
+                    title={title}
+                    onProductSelection={handleProductSelection}
+                  />
+                )
+              })
+            )}
       </div>
     </section>
   )

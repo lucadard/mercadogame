@@ -8,23 +8,23 @@ const Text = ({ children }: Props) => {
   const [showQuestion, setShowQuestion] = useState(false)
 
   return (
-    <div className="h-full relative group">
+    <div className='group relative h-full'>
       {!showQuestion && (
-        <div className="z-10 absolute top-0 left-0 w-full h-full grid place-content-center">
+        <div className='absolute left-0 top-0 z-10 grid h-full w-full place-content-center'>
           <span
-            className="material-symbols-outlined cursor-pointer"
+            className='material-symbols-outlined cursor-pointer'
             onClick={() => setShowQuestion(true)}
           >
             visibility
           </span>
         </div>
       )}
-      <div className="py-4 bg-white shadow-sm group-hover:shadow-lg group">
+      <div className='group bg-white py-4 shadow-sm group-hover:shadow-lg'>
         <p
-          className={`text-lg px-4 text-center max-h-[30px] min-h-[30px] overflow-hidden duration-200 flex justify-center 
+          className={`flex max-h-[30px] min-h-[30px] justify-center overflow-hidden px-4 text-center text-lg duration-200 
         ${
           !showQuestion
-            ? 'blur-sm opacity-40 select-none'
+            ? 'select-none opacity-40 blur-sm'
             : 'group-hover:max-h-[90px]'
         }
         `}
